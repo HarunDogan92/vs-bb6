@@ -3,10 +3,19 @@
 <html xmlns:ui="jakarta.faces.facelets"
       xmlns:f="jakarta.faces.core"
       xmlns:h="jakarta.faces.html">
-  <h:head>
-    <title>Welcome</title>
-  </h:head>
-  <h:body>
-    Welcome to the banking application!
-  </h:body>
+<h:head>
+  <title>Banking Application</title>
+</h:head>
+<h:body>
+  <h:form>
+    <h3>Buy Stocks</h3>
+    <h:outputLabel for="symbol" value="Stock Symbol: " />
+    <h:inputText id="symbol" value="#{bankBean.symbol}" />
+    <br/><br/>
+    <h:outputLabel for="shares" value="Number of Shares: " />
+    <h:inputText id="shares" value="#{bankBean.shares}" />
+    <br/><br/>
+    <h:commandButton value="Buy" action="#{bankBean.buyStock}" />
+  </h:form>
+</h:body>
 </html>
