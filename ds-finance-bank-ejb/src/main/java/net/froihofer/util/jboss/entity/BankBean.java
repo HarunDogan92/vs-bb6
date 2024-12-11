@@ -21,9 +21,9 @@ public class BankBean {
         try {
             // Hier den REST-Endpunkt aufrufen
             Client client = ClientBuilder.newClient();
-            String restEndpoint = "http://localhost:8080/api/bank/buy/" + symbol + "/" + shares;
+            String restEndpoint = "http://localhost:8080/ds-finance-bank-web/api/bank/buy/" + symbol + "/" + shares;
 
-            String username = "enes";
+            String username = "harun";
             String password = "test";
             String auth = username + ":" + password;
             String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
