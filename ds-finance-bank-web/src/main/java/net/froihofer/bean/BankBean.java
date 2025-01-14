@@ -24,10 +24,7 @@ public class BankBean {
     private CustomerService customerService;
     @EJB
     private EmployeeService employeeService;
-    @Getter
     private Map<String, Double> portfolioSummary;
-    private String searchQuery;
-    private List<PublicStockQuote> searchResults;
 
     private String symbol;
     private int shares;
@@ -54,16 +51,6 @@ public class BankBean {
         loadPortfolioSummary();
     }
 
-    public void searchStocks() {
-        try {
-            searchResults = customerService.searchStocks(searchQuery);
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "fehler biem suchen", e.getMessage()));
-            e.printStackTrace();
-        }
-    }
-
     public void loadPortfolioSummary() {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
@@ -74,37 +61,10 @@ public class BankBean {
         }
     }
 
-    public void buyStock() {
-        try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            String username = context.getExternalContext().getUserPrincipal().getName();
-            customerService.buyStock(symbol, shares, username);
-            loadPortfolioSummary();
-        } catch (Exception e) {
-            e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
-        }
-    }
-
     public void buyStockForCustomer(String username) {
         try {
             employeeService.buyStockForCustomer(symbol, shares, username);
             loadPortfolioSummary();
-        } catch (Exception e) {
-            e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
-        }
-    }
-
-    public void sellStock() {
-        try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            String username = context.getExternalContext().getUserPrincipal().getName();
-            customerService.sellStock(symbol, shares, username);
-            loadPortfolioSummary();
-
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,

@@ -10,13 +10,13 @@
         <h3>Aktien suchen</h3>
         <h:form>
             <h:outputLabel for="searchQuery" value="Aktie suchen: " />
-            <h:inputText id="searchQuery" value="#{bankBean.searchQuery}" />
-            <h:commandButton value="Suchen" action="#{bankBean.searchStocks}">
+            <h:inputText id="searchQuery" value="#{customerBean.searchQuery}" />
+            <h:commandButton value="Suchen" action="#{customerBean.searchStocks}">
                 <f:ajax execute="@form" render="searchResults" />
             </h:commandButton>
         </h:form>
 
-        <h:dataTable id="searchResults" value="#{bankBean.searchResults}" var="stock">
+        <h:dataTable id="searchResults" value="#{customerBean.searchResults}" var="stock">
             <h:column>
                 <f:facet name="header">Firma</f:facet>
                 #{stock.companyName}
@@ -32,8 +32,8 @@
         </h:dataTable>
 
         <h3>mein portfolio</h3>
-        <h:form>
-            <h:dataTable value="#{bankBean.portfolioSummary}" var="entry">
+        <h:form id="portfolioSummary">
+            <h:dataTable value="#{customerBean.portfolioSummary}" var="entry">
                 <h:column>
                     <f:facet name="header">Stock Symbol</f:facet>
                     #{entry.key}
@@ -48,15 +48,18 @@
         <h:form>
             <h3>Buy Stocks</h3>
             <h:outputLabel for="symbol" value="Stock Symbol: " />
-            <h:inputText id="symbol" value="#{bankBean.symbol}" />
+            <h:inputText id="symbol" value="#{customerBean.symbol}" />
             <br/><br/>
 
             <h:outputLabel for="shares" value="Number of Shares: " />
-            <h:inputText id="shares" value="#{bankBean.shares}" />
+            <h:inputText id="shares" value="#{customerBean.shares}" />
             <br/><br/>
 
-            <h:commandButton value="Buy Stock" action="#{bankBean.buyStock}">
-                <f:ajax execute="@form" render="@form portfolio" />
+            <h:commandButton value="Buy Stock" action="#{customerBean.buyStock}">
+                <f:ajax execute="@form" render="portfolioSummary" />
+            </h:commandButton>
+            <h:commandButton value="Aktien verkaufen" action="#{customerBean.sellStock}">
+                <f:ajax execute="@form" render="portfolioSummary" />
             </h:commandButton>
         </h:form>
     </h:panelGroup>
