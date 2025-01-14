@@ -59,7 +59,7 @@
       <f:ajax execute="@form" render="searchResults" />
     </h:commandButton>
   </h:form>
-
+y
   <h:dataTable id="searchResults" value="#{bankBean.searchResults}" var="stock">
     <h:column>
       <f:facet name="header">Firma</f:facet>
@@ -110,6 +110,28 @@
         <f:ajax execute="@form" render="@form portfolio" />
       </h:commandButton>
     </h:form>
+  </h:form>
+
+  <h:form rendered="#{bankBean.userRole eq 'Employee'}">
+    <h3>Kundenmanagement</h3>
+
+    <h:outputLabel for="firstName" value="Vorname: " />
+    <h:inputText id="firstName" value="#{customerBean.firstName}" />
+    <br/><br/>
+
+    <h:outputLabel for="lastName" value="Nachname: " />
+    <h:inputText id="lastName" value="#{customerBean.lastName}" />
+    <br/><br/>
+
+    <h:outputLabel for="address" value="Adresse: " />
+    <h:inputText id="address" value="#{customerBean.address}" />
+    <br/><br/>
+
+    <h:outputLabel for="customerId" value="Kundennummer: " />
+    <h:inputText id="customerId" value="#{customerBean.id}" />
+    <br/><br/>
+
+    <h:commandButton value="Kunde anlegen" action="#{customerBean.addCustomer}" />
   </h:form>
 
   <div class="footer">
