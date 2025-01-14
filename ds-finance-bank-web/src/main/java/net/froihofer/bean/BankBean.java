@@ -9,7 +9,8 @@ import jakarta.faces.context.FacesContext;
 import lombok.Data;
 import lombok.Getter;
 import net.froihofer.dsfinance.ws.trading.api.PublicStockQuote;
-import net.froihofer.util.jboss.service.BankService;
+import net.froihofer.util.jboss.service.CustomerService;
+import net.froihofer.util.jboss.service.EmployeeService;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,7 +21,9 @@ import java.util.Map;
 @Data
 public class BankBean {
     @EJB
-    private BankService bankService;
+    private CustomerService customerService;
+    @EJB
+    private EmployeeService employeeService;
     @Getter
     private Map<String, Double> portfolioSummary;
     private String searchQuery;
@@ -52,7 +55,7 @@ public class BankBean {
 
     public void searchStocks() {
         try {
-            searchResults = bankService.searchStocks(searchQuery);
+            searchResults = customerService.searchStocks(searchQuery);
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "fehler biem suchen", e.getMessage()));
@@ -64,7 +67,7 @@ public class BankBean {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
             String username = context.getExternalContext().getUserPrincipal().getName();
-            portfolioSummary = bankService.getPortfolioSummary(username);
+            portfolioSummary = customerService.getPortfolioSummary(username);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,13 +76,21 @@ public class BankBean {
     public void buyStock() {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
-            String role = context.getExternalContext().isUserInRole("employee") ? "Employee" : "Customer";
-            bankService.buyStock(symbol, shares);
+            String username = context.getExternalContext().getUserPrincipal().getName();
+            customerService.buyStock(symbol, shares, username);
             loadPortfolioSummary();
 
+        } catch (Exception e) {
+            e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-                            role + ": Stocks purchased successfully."));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+        }
+    }
+
+    public void buyStockForCustomer(String username) {
+        try {
+            employeeService.buyStockForCustomer(symbol, shares, username);
+            loadPortfolioSummary();
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,
@@ -90,13 +101,22 @@ public class BankBean {
     public void sellStock() {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
-            String role = context.getExternalContext().isUserInRole("employee") ? "Employee" : "Customer";
-            bankService.sellStock(symbol, shares);
+            String username = context.getExternalContext().getUserPrincipal().getName();
+            customerService.sellStock(symbol, shares, username);
             loadPortfolioSummary();
 
+        } catch (Exception e) {
+            e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-                            role + ": Stocks sold successfully."));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+        }
+    }
+
+    public void sellStockForCustomer(String username) {
+        try {
+            employeeService.sellStockForCustomer(symbol, shares, username);
+            loadPortfolioSummary();
+
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,

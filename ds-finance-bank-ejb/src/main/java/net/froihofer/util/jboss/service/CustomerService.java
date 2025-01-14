@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 
 @Stateless
 @RolesAllowed({"employee", "customer"})
-public class BankService {
+public class CustomerService {
+
     @PersistenceContext
     private EntityManager em;
 
@@ -70,7 +71,7 @@ public class BankService {
         return portfolioSummary;
     }
 
-    public void sellStock(String symbol, int shares) throws TradingWSException_Exception {
+    public void sellStock(String symbol, int shares, String username) throws TradingWSException_Exception {
         Bank bank = getBank();
         double stockPrice = webService.getLastTradePriceBySymbol(symbol);
 
@@ -80,8 +81,7 @@ public class BankService {
         em.merge(bank);
 
         FacesContext context = FacesContext.getCurrentInstance();
-        String username = context.getExternalContext().getUserPrincipal().getName();
-        String role = context.getExternalContext().isUserInRole("employee") ? "employee" : "customer";
+        String role = context.getExternalContext().isUserInRole("employee") ? "Employee" : "Customer";
 
         TradingHistory tradingHistory = TradingHistory.builder()
                 .symbol(symbol)
@@ -94,7 +94,7 @@ public class BankService {
         em.persist(tradingHistory);
     }
 
-    public void buyStock(String symbol, int shares) throws TradingWSException_Exception {
+    public void buyStock(String symbol, int shares, String username) throws TradingWSException_Exception {
         Bank bank = getBank();
         double stockPrice = webService.getLastTradePriceBySymbol(symbol);
 
@@ -108,8 +108,7 @@ public class BankService {
         em.merge(bank);
 
         FacesContext context = FacesContext.getCurrentInstance();
-        String username = context.getExternalContext().getUserPrincipal().getName();
-        String role = context.getExternalContext().isUserInRole("employee") ? "employee" : "customer";
+        String role = context.getExternalContext().isUserInRole("employee") ? "Employee" : "Customer";
 
         TradingHistory tradingHistory = TradingHistory.builder()
                 .symbol(symbol)
@@ -123,7 +122,4 @@ public class BankService {
     }
 
 
-    //public void sellstock
-
-    //public void showportfolio (user)
 }
