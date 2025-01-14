@@ -5,17 +5,117 @@
       xmlns:h="jakarta.faces.html">
 <h:head>
   <title>Banking Application</title>
+  <style>
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .header .username {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .header .logout {
+      text-align: right;
+    }
+    .footer {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
 </h:head>
 <h:body>
+  <div class="header">
+    <div class="username">
+      Logged in as: #{bankBean.username}
+    </div>
+
+    <div class="logout">
+      <h:form>
+        <h:commandButton value="Logout" action="#{bankBean.logout}" />
+      </h:form>
+    </div>
+  </div>
+  <h3>Aktien suchen</h3>
   <h:form>
-    <h3>Buy Stocks</h3>
-    <h:outputLabel for="symbol" value="Stock Symbol: " />
-    <h:inputText id="symbol" value="#{bankBean.symbol}" />
-    <br/><br/>
-    <h:outputLabel for="shares" value="Number of Shares: " />
-    <h:inputText id="shares" value="#{bankBean.shares}" />
-    <br/><br/>
-    <h:commandButton value="Buy" action="#{bankBean.buyStock}" />
+    <h:outputLabel for="searchQuery" value="Aktie suchen: " />
+    <h:inputText id="searchQuery" value="#{bankBean.searchQuery}" />
+    <h:commandButton value="Suchen" action="#{bankBean.searchStocks}">
+      <f:ajax execute="@form" render="searchResults" />
+    </h:commandButton>
   </h:form>
+
+  <h:dataTable id="searchResults" value="#{bankBean.searchResults}" var="stock">
+    <h:column>
+      <f:facet name="header">Firma</f:facet>
+      #{stock.companyName}
+    </h:column>
+    <h:column>
+      <f:facet name="header">Letzter Kurs</f:facet>
+      #{stock.lastTradePrice}
+    </h:column>
+    <h:column>
+      <f:facet name="header">Marktkapitalisierung</f:facet>
+      #{stock.marketCapitalization}
+    </h:column>
+  </h:dataTable>
+
+  <h3>mein portfolio</h3>
+  <h:form>
+    <h:dataTable value="#{bankBean.portfolioSummary}" var="entry">
+      <h:column>
+        <f:facet name="header">Stock Symbol</f:facet>
+        #{entry.key}
+      </h:column>
+      <h:column>
+        <f:facet name="header">Total Value</f:facet>
+        #{entry.value}
+      </h:column>
+    </h:dataTable>
+  </h:form>
+
+  <h:form>
+    <h3>role</h3>
+
+    <h:outputText value="Your Role: #{bankBean.userRole}" />
+    <br/><br/>
+
+    <h:form>
+      <h3>Buy Stocks</h3>
+
+      <h:outputLabel for="symbol" value="Stock Symbol: " />
+      <h:inputText id="symbol" value="#{bankBean.symbol}" />
+      <br/><br/>
+
+      <h:outputLabel for="shares" value="Number of Shares: " />
+      <h:inputText id="shares" value="#{bankBean.shares}" />
+      <br/><br/>
+
+      <h:commandButton value="Buy Stock" action="#{bankBean.buyStock}">
+        <f:ajax execute="@form" render="@form portfolio" />
+      </h:commandButton>
+    </h:form>
+  </h:form>
+
+  <div class="footer">
+    <h:form>
+    <h:commandButton value="Aktien verkaufen" action="#{bankBean.sellStock}" />
+    </h:form>
+  </div>
 </h:body>
 </html>

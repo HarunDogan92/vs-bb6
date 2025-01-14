@@ -22,6 +22,8 @@ public class TradingHistory {
     private double availableVolume=1000000000;
     private String symbol;
     private int shares;
+    private String username;
+    private String role;
 
     @PrePersist
     protected void onCreate() {
