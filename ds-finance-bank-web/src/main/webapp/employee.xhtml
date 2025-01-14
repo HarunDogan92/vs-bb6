@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets">
+    <h:panelGroup rendered="#{bankBean.userRole eq 'Employee'}">
+        <h3>Role</h3>
+        <h:outputText value="Your Role: #{bankBean.userRole}" />
+        <br/><br/>
+
+        <h3>Kundenmanagement</h3>
+
+        <h:form>
+            <h:outputLabel for="firstName" value="Vorname: " />
+            <h:inputText id="firstName" value="#{customerBean.firstName}" />
+            <br/><br/>
+
+            <h:outputLabel for="lastName" value="Nachname: " />
+            <h:inputText id="lastName" value="#{customerBean.lastName}" />
+            <br/><br/>
+
+            <h:outputLabel for="address" value="Adresse: " />
+            <h:inputText id="address" value="#{customerBean.address}" />
+            <br/><br/>
+
+            <h:outputLabel for="customerId" value="Kundennummer: " />
+            <h:inputText id="customerId" value="#{customerBean.id}" />
+            <br/><br/>
+
+            <h:commandButton value="Kunde anlegen" action="#{customerBean.addCustomer}" />
+        </h:form>
+    </h:panelGroup>
+</ui:composition>

@@ -7,6 +7,7 @@ import jakarta.inject.Named;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import lombok.Data;
+import lombok.Getter;
 import net.froihofer.dsfinance.ws.trading.api.PublicStockQuote;
 import net.froihofer.util.jboss.service.CustomerService;
 import net.froihofer.util.jboss.service.EmployeeService;
@@ -23,6 +24,7 @@ public class BankBean {
     private CustomerService customerService;
     @EJB
     private EmployeeService employeeService;
+    @Getter
     private Map<String, Double> portfolioSummary;
     private String searchQuery;
     private List<PublicStockQuote> searchResults;
@@ -46,6 +48,7 @@ public class BankBean {
         }
         return "Unknown";
     }
+
     @PostConstruct
     public void init() {
         loadPortfolioSummary();
@@ -77,7 +80,6 @@ public class BankBean {
             String username = context.getExternalContext().getUserPrincipal().getName();
             customerService.buyStock(symbol, shares, username);
             loadPortfolioSummary();
-
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,

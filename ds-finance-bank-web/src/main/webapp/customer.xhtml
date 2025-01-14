@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets">
+    <h:panelGroup rendered="#{bankBean.userRole eq 'Customer'}">
+        <h3>Role</h3>
+        <h:outputText value="Your Role: #{bankBean.userRole}" />
+        <br/><br/>
+
+        <h3>Aktien suchen</h3>
+        <h:form>
+            <h:outputLabel for="searchQuery" value="Aktie suchen: " />
+            <h:inputText id="searchQuery" value="#{bankBean.searchQuery}" />
+            <h:commandButton value="Suchen" action="#{bankBean.searchStocks}">
+                <f:ajax execute="@form" render="searchResults" />
+            </h:commandButton>
+        </h:form>
+
+        <h:dataTable id="searchResults" value="#{bankBean.searchResults}" var="stock">
+            <h:column>
+                <f:facet name="header">Firma</f:facet>
+                #{stock.companyName}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Letzter Kurs</f:facet>
+                #{stock.lastTradePrice}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Marktkapitalisierung</f:facet>
+                #{stock.marketCapitalization}
+            </h:column>
+        </h:dataTable>
+
+        <h3>mein portfolio</h3>
+        <h:form>
+            <h:dataTable value="#{bankBean.portfolioSummary}" var="entry">
+                <h:column>
+                    <f:facet name="header">Stock Symbol</f:facet>
+                    #{entry.key}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Total Value</f:facet>
+                    #{entry.value}
+                </h:column>
+            </h:dataTable>
+        </h:form>
+
+        <h:form>
+            <h3>Buy Stocks</h3>
+            <h:outputLabel for="symbol" value="Stock Symbol: " />
+            <h:inputText id="symbol" value="#{bankBean.symbol}" />
+            <br/><br/>
+
+            <h:outputLabel for="shares" value="Number of Shares: " />
+            <h:inputText id="shares" value="#{bankBean.shares}" />
+            <br/><br/>
+
+            <h:commandButton value="Buy Stock" action="#{bankBean.buyStock}">
+                <f:ajax execute="@form" render="@form portfolio" />
+            </h:commandButton>
+        </h:form>
+    </h:panelGroup>
+</ui:composition>
