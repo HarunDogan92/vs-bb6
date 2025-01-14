@@ -87,6 +87,23 @@ public class BankBean {
         }
     }
 
+    public void sellStock() {
+        try {
+            FacesContext context = FacesContext.getCurrentInstance();
+            String role = context.getExternalContext().isUserInRole("employee") ? "Employee" : "Customer";
+            bankService.sellStock(symbol, shares);
+            loadPortfolioSummary();
+
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                            role + ": Stocks sold successfully."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+        }
+    }
+
     public void logout() {
         try {
             System.out.println("Logout called");

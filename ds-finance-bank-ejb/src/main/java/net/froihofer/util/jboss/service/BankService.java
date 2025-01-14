@@ -70,6 +70,29 @@ public class BankService {
         return portfolioSummary;
     }
 
+    public void sellStock(String symbol, int shares) throws TradingWSException_Exception {
+        Bank bank = getBank();
+        double stockPrice = webService.getLastTradePriceBySymbol(symbol);
+
+        double totalCost = stockPrice * shares;
+        webService.sellStock(symbol, shares);
+        bank.setAvailableVolume(bank.getAvailableVolume() + totalCost);
+        em.merge(bank);
+
+        FacesContext context = FacesContext.getCurrentInstance();
+        String username = context.getExternalContext().getUserPrincipal().getName();
+        String role = context.getExternalContext().isUserInRole("employee") ? "employee" : "customer";
+
+        TradingHistory tradingHistory = TradingHistory.builder()
+                .symbol(symbol)
+                .shares(-shares)
+                .availableVolume(bank.getAvailableVolume())
+                .username(username)
+                .role(role)
+                .build();
+
+        em.persist(tradingHistory);
+    }
 
     public void buyStock(String symbol, int shares) throws TradingWSException_Exception {
         Bank bank = getBank();

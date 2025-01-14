@@ -68,6 +68,15 @@ public class WebService {
         }
     }
 
+    public void sellStock(String symbol, int shares) throws TradingWSException_Exception {
+        init();
+        try {
+            tradingWebService.sell(symbol, shares);
+        } catch (TradingWSException_Exception e) {
+            throw e;
+        }
+    }
+
     public void buyStock(String symbol, int shares) throws TradingWSException_Exception {
         init();
         try {
