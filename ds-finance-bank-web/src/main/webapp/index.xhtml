@@ -131,6 +131,14 @@ y
     <h:inputText id="customerId" value="#{customerBean.id}" />
     <br/><br/>
 
+    <h:outputLabel for="username" value="Username: " />
+    <h:inputText id="username" value="#{customerBean.username}" />
+    <br/><br/>
+
+    <h:outputLabel for="password" value="Passwort: " />
+    <h:inputText id="password" value="#{customerBean.password}" />
+    <br/><br/>
+
     <h:commandButton value="Kunde anlegen" action="#{customerBean.addCustomer}" />
   </h:form>
 

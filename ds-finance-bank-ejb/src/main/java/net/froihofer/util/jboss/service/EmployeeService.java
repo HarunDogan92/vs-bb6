@@ -36,14 +36,16 @@ public class EmployeeService {
     }
 
     public void addCustomer(Long id, String username, String password, String firstName, String lastName, String address) throws IOException {
+        Depot depot = Depot.builder().build();
         Customer customer = Customer.builder()
                 .id(id)
                 .username(username)
                 .firstName(firstName)
                 .lastName(lastName)
-                .depot(Depot.builder().build())
+                .depot(depot)
                 .address(address).build();
 
+        em.persist(depot);
         em.persist(customer);
 
         authDBHelper.addUser(username, password, new String[]{"customer"});
