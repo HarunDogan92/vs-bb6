@@ -48,7 +48,7 @@ public class HoldingService {
         }
 
         if(holding.getShares() < shares) {
-            throw new IllegalArgumentException("Es sind nicht genug shares vorhanden!");
+            throw new IllegalArgumentException("Du besitzt für die Aktie " + symbol + " nicht genug shares!");
         }
 
         holding.setShares(holding.getShares()-shares);
