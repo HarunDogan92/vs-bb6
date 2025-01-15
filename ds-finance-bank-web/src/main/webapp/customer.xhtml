@@ -14,16 +14,16 @@
         <h:form styleClass="search-form">
             <h:panelGrid columns="2">
                 <h:outputLabel for="searchQuery" value="Aktie suchen:" />
-                <h:inputText id="searchQuery" value="#{customerBean.searchQuery}" />
+                <h:inputText id="searchQuery" value="#{bankBean.searchQuery}" />
             </h:panelGrid>
 
-            <h:commandButton value="Suchen" action="#{customerBean.searchStocks}">
+            <h:commandButton value="Suchen" action="#{bankBean.searchStocks}">
                 <f:ajax execute="@form" render="searchResults" />
             </h:commandButton>
         </h:form>
 
         <h:panelGroup styleClass="search-results-container">
-            <h:dataTable id="searchResults" value="#{customerBean.searchResults}" var="stock">
+            <h:dataTable id="searchResults" value="#{bankBean.searchResults}" var="stock">
                 <h:column>
                     <f:facet name="header">Firma</f:facet>
                     #{stock.companyName}

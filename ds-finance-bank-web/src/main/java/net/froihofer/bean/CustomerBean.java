@@ -9,7 +9,6 @@ import lombok.Data;
 import net.froihofer.dsfinance.ws.trading.api.PublicStockQuote;
 import net.froihofer.util.jboss.entity.Holding;
 import net.froihofer.util.jboss.service.CustomerService;
-import net.froihofer.util.jboss.service.EmployeeService;
 
 import java.util.List;
 
@@ -19,8 +18,6 @@ import java.util.List;
 public class CustomerBean {
     private String symbol;
     private int shares;
-    private List<PublicStockQuote> searchResults;
-    private String searchQuery;
 
     @EJB
     private CustomerService customerService;
@@ -29,16 +26,6 @@ public class CustomerBean {
         FacesContext context = FacesContext.getCurrentInstance();
         String username = context.getExternalContext().getUserPrincipal().getName();
         return customerService.getHoldings(username);
-    }
-
-    public void searchStocks() {
-        try {
-            searchResults = customerService.searchStocks(searchQuery);
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "fehler beim suchen", e.getMessage()));
-            e.printStackTrace();
-        }
     }
 
     public void buyStock() {

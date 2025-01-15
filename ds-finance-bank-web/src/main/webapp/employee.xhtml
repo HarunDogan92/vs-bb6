@@ -4,28 +4,28 @@
                 xmlns:ui="jakarta.faces.facelets">
 <h:panelGroup rendered="#{bankBean.userRole eq 'Employee'}">
     <!-- Header with the user's role -->
-        <h:panelGroup styleClass="header">
-            <h3>Role:
-                <h:outputText value="#{bankBean.userRole}" />
-            </h3>
-        </h:panelGroup>
-        <!-- Kundensuche Section -->
-        <h3>Kundensuche</h3>
-        <h:form id="searchForm" styleClass="search-form">
-            <h:panelGrid columns="4" >
-                <h:outputLabel for="searchId" value="Kundennummer:" />
-                <h:inputText id="searchId" value="#{employeeBean.customerId}" />
+    <h:panelGroup styleClass="header">
+        <h3>Role:
+            <h:outputText value="#{bankBean.userRole}" />
+        </h3>
+    </h:panelGroup>
+    <!-- Kundensuche Section -->
+    <h3>Kundensuche</h3>
+    <h:form id="searchForm" styleClass="search-form">
+        <h:panelGrid columns="4" >
+            <h:outputLabel for="searchId" value="Kundennummer:" />
+            <h:inputText id="searchId" value="#{employeeBean.customerId}" />
 
-                <h:outputLabel for="searchName" value="Name:" />
-                <h:inputText id="searchName" value="#{employeeBean.customerName}" />
-            </h:panelGrid>
-            <br />
+            <h:outputLabel for="searchName" value="Name:" />
+            <h:inputText id="searchName" value="#{employeeBean.customerName}" />
+        </h:panelGrid>
+        <br />
 
-            <h:commandButton value="Suchen" action="#{employeeBean.searchCustomer}">
-                <f:ajax execute="@form" render="searchResults1 messagesSearch" />
-            </h:commandButton>
+        <h:commandButton value="Suchen" action="#{employeeBean.searchCustomer}">
+            <f:ajax execute="@form" render="searchResults1 messagesSearch" />
+        </h:commandButton>
 
-            <h:messages id="messagesSearch" showDetail="true" style="color:red;" />
+        <h:messages id="messagesSearch" showDetail="true" style="color:red;" />
 
         <!-- Search Results Table -->
         <h:panelGroup styleClass="search-results-container">
@@ -51,38 +51,40 @@
             </h:dataTable>
         </h:panelGroup>
 
-    <h:panelGroup id="selectedCustomerPanel" styleClass="#{not empty employeeBean.selectedCustomer ? '' : 'hidden'}">
-        <h3>Kunde:</h3>
-        <h:outputText value="Name: #{employeeBean.selectedCustomer.firstName} #{employeeBean.selectedCustomer.lastName}" />
-        <br />
-        <h:outputText value="Adresse: #{employeeBean.selectedCustomer.address}" />
-        <br /><br />
+        <h:panelGroup id="selectedCustomerPanel" styleClass="#{not empty employeeBean.selectedCustomer ? '' : 'hidden'}">
+            <h3>Kunde:</h3>
+            <h:outputText value="Name: #{employeeBean.selectedCustomer.firstName} #{employeeBean.selectedCustomer.lastName}" />
+            <br />
+            <h:outputText value="Adresse: #{employeeBean.selectedCustomer.address}" />
+            <br /><br />
 
-        <h3>Aktien suchen</h3>
-        <h:form id="stockSearchForm">
-            <h:outputLabel for="searchQuery" value="Aktie suchen: " />
-            <h:inputText id="searchQuery" value="#{customerBean.searchQuery}" />
-            <h:commandButton value="Suchen" action="#{customerBean.searchStocks}">
-                <f:ajax execute="@form" render="aktienSearch" />
-            </h:commandButton>
-        </h:form>
+            <h3>Aktien suchen</h3>
+            <h:form id="stockSearchForm">
+                <h:outputLabel for="searchQuery" value="Aktie suchen: " />
+                <h:inputText id="searchQuery" value="#{bankBean.searchQuery}" />
+                <h:commandButton value="Suchen" action="#{bankBean.searchStocks}">
+                    <f:ajax execute="@form" render="aktienSearch" />
+                </h:commandButton>
+            </h:form>
 
-        <h:dataTable id="aktienSearch" value="#{customerBean.searchResults}" var="stock">
-            <h:column>
-                <f:facet name="header">Firma</f:facet>
-                #{stock.companyName}
-            </h:column>
-            <h:column>
-                <f:facet name="header">Letzter Kurs</f:facet>
-                #{stock.lastTradePrice}
-            </h:column>
-            <h:column>
-                <f:facet name="header">Marktkapitalisierung</f:facet>
-                #{stock.marketCapitalization}
-            </h:column>
-        </h:dataTable>
-    </h:panelGroup>
-        </h:form>
+            <h:panelGroup styleClass="search-results-container">
+                <h:dataTable id="aktienSearch" value="#{bankBean.searchResults}" var="stock">
+                    <h:column styleClass="kid-col">
+                        <f:facet name="header">Firma</f:facet>
+                        #{stock.companyName}
+                    </h:column>
+                    <h:column styleClass="name-col">
+                        <f:facet name="header">Letzter Kurs</f:facet>
+                        #{stock.lastTradePrice}
+                    </h:column>
+                    <h:column styleClass="address-col">
+                        <f:facet name="header">Marktkapitalisierung</f:facet>
+                        #{stock.marketCapitalization}
+                    </h:column>
+                </h:dataTable>
+            </h:panelGroup>
+        </h:panelGroup>
+    </h:form>
 
     <!-- Neuer Kunde Form  -->
     <h3>Neuer Kunde</h3>
