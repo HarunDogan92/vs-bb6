@@ -13,8 +13,7 @@ import net.froihofer.util.jboss.entity.Bank;
 import net.froihofer.util.jboss.entity.Customer;
 import net.froihofer.util.jboss.entity.TradingHistory;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Stateless
@@ -47,13 +46,14 @@ public class CustomerService {
 
     public List<Customer> searchCustomer(Long id, String name) {
         String query = "SELECT c FROM Customer c WHERE (:id IS NULL OR c.id = :id) " +
-                "AND (:name IS NULL OR LOWER(c.firstName) LIKE LOWER(CONCAT('%', :name, '%')))";
+                "AND (:name IS NULL OR " +
+                "LOWER(c.firstName) LIKE LOWER(CONCAT('%', :name, '%')) OR " +
+                "LOWER(c.lastName) LIKE LOWER(CONCAT('%', :name, '%')))";
         return em.createQuery(query, Customer.class)
                 .setParameter("id", id)
                 .setParameter("name", name)
                 .getResultList();
     }
-
 
     public Map<String, Double> getPortfolioSummary(String username) throws TradingWSException_Exception {
         List<TradingHistory> tradingHistoryList = em.createQuery(
@@ -64,22 +64,31 @@ public class CustomerService {
         Map<String, Integer> sharesBySymbol = tradingHistoryList.stream()
                 .collect(Collectors.groupingBy(TradingHistory::getSymbol, Collectors.summingInt(TradingHistory::getShares)));
 
-        Map<String, Double> portfolioSummary = sharesBySymbol.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> {
-                            try {
-                                double currentPrice = webService.getLastTradePriceBySymbol(entry.getKey());
-                                return currentPrice * entry.getValue();
-                            } catch (TradingWSException_Exception e) {
-                                e.printStackTrace();
-                                return 0.0;
-                            }
-                        }
-                ));
+        Map<String, Double> portfolioSummary = new LinkedHashMap<>();
+        double totalDepotValue = 0.0;
+
+        for (Map.Entry<String, Integer> entry : sharesBySymbol.entrySet()) {
+            String symbol = entry.getKey();
+            int shares = entry.getValue();
+            if (shares > 0) {
+                try {
+                    double currentPrice = webService.getLastTradePriceBySymbol(symbol);
+                    double totalValue = currentPrice * shares;
+                    portfolioSummary.put(symbol + " (" + shares + " shares)", totalValue);
+                    totalDepotValue += totalValue;
+                } catch (TradingWSException_Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        portfolioSummary.put("Total Depot Value", totalDepotValue);
 
         return portfolioSummary;
     }
+
+
+
 
     public void sellStock(String symbol, int shares, String username) throws TradingWSException_Exception {
         Bank bank = getBank();
