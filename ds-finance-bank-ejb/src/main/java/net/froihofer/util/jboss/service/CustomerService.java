@@ -11,10 +11,11 @@ import net.froihofer.dsfinance.ws.trading.api.PublicStockQuote;
 import net.froihofer.dsfinance.ws.trading.api.TradingWSException_Exception;
 import net.froihofer.util.jboss.entity.Bank;
 import net.froihofer.util.jboss.entity.Customer;
+import net.froihofer.util.jboss.entity.Holding;
 import net.froihofer.util.jboss.entity.TradingHistory;
+import net.froihofer.util.jboss.repository.CustomerRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Stateless
 @RolesAllowed({"employee", "customer"})
@@ -26,6 +27,12 @@ public class CustomerService {
     @Inject
     private WebService webService;
 
+    @Inject
+    private CustomerRepository customerRepository;
+
+    @Inject
+    private HoldingService holdingService;
+
     private Bank getBank() {
         TypedQuery<Bank> query = em.createQuery("SELECT b FROM Bank b WHERE b.name = :name", Bank.class);
         query.setParameter("name", "Bank");
@@ -34,6 +41,10 @@ public class CustomerService {
             throw new IllegalStateException("Bank-Datensatz nicht gefunden!");
         }
         return bank;
+    }
+
+    public Customer getCustomerByUsername(String username) {
+        return customerRepository.findByUsername(username);
     }
 
     public List<PublicStockQuote> getPublicStockQuotes(String companyName) throws TradingWSException_Exception {
@@ -55,46 +66,16 @@ public class CustomerService {
                 .getResultList();
     }
 
-    public Map<String, Double> getPortfolioSummary(String username) throws TradingWSException_Exception {
-        List<TradingHistory> tradingHistoryList = em.createQuery(
-                        "SELECT th FROM TradingHistory th WHERE th.username = :username", TradingHistory.class)
-                .setParameter("username", username)
-                .getResultList();
-
-        Map<String, Integer> sharesBySymbol = tradingHistoryList.stream()
-                .collect(Collectors.groupingBy(TradingHistory::getSymbol, Collectors.summingInt(TradingHistory::getShares)));
-
-        Map<String, Double> portfolioSummary = new LinkedHashMap<>();
-        double totalDepotValue = 0.0;
-
-        for (Map.Entry<String, Integer> entry : sharesBySymbol.entrySet()) {
-            String symbol = entry.getKey();
-            int shares = entry.getValue();
-            if (shares > 0) {
-                try {
-                    double currentPrice = webService.getLastTradePriceBySymbol(symbol);
-                    double totalValue = currentPrice * shares;
-                    portfolioSummary.put(symbol + " (" + shares + " shares)", totalValue);
-                    totalDepotValue += totalValue;
-                } catch (TradingWSException_Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        portfolioSummary.put("Total Depot Value", totalDepotValue);
-
-        return portfolioSummary;
+    public List<Holding> getPortfolioSummary(String username) {
+        return getCustomerByUsername(username).getDepot().getHoldings();
     }
-
-
-
 
     public void sellStock(String symbol, int shares, String username) throws TradingWSException_Exception {
         Bank bank = getBank();
-        double stockPrice = webService.getLastTradePriceBySymbol(symbol);
+        Customer customer = getCustomerByUsername(username);
+        double totalCost = getTotalCost(symbol, shares);
 
-        double totalCost = stockPrice * shares;
+        holdingService.sell(symbol, shares, customer.getDepot());
         webService.sellStock(symbol, shares);
         bank.setAvailableVolume(bank.getAvailableVolume() + totalCost);
         em.merge(bank);
@@ -113,15 +94,19 @@ public class CustomerService {
         em.persist(tradingHistory);
     }
 
+    public double getTotalCost(String symbol, int shares) throws TradingWSException_Exception {
+        return webService.getLastTradePriceBySymbol(symbol) * shares;
+    }
+
     public void buyStock(String symbol, int shares, String username) throws TradingWSException_Exception {
         Bank bank = getBank();
-        double stockPrice = webService.getLastTradePriceBySymbol(symbol);
-
-        double totalCost = stockPrice * shares;
+        Customer customer = getCustomerByUsername(username);
+        double totalCost = getTotalCost(symbol, shares);
         if (bank.getAvailableVolume() < totalCost) {
             throw new IllegalArgumentException("Nicht genügend Guthaben, um die Aktien zu kaufen!");
         }
 
+        holdingService.buy(symbol, shares, customer.getDepot());
         webService.buyStock(symbol, shares);
         bank.setAvailableVolume(bank.getAvailableVolume() - totalCost);
         em.merge(bank);

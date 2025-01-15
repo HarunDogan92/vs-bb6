@@ -36,11 +36,15 @@
             <h:dataTable value="#{customerBean.portfolioSummary}" var="entry">
                 <h:column>
                     <f:facet name="header">Stock Symbol (shares)</f:facet>
-                    #{entry.key}
+                    #{entry.symbol}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Shares</f:facet>
+                    #{entry.shares}
                 </h:column>
                 <h:column>
                     <f:facet name="header">Total Value</f:facet>
-                    #{entry.value}
+                    #{customerBean.customerService.getTotalCost(entry.symbol, entry.shares)}
                 </h:column>
             </h:dataTable>
         </h:form>

@@ -9,6 +9,7 @@ import jakarta.faces.context.FacesContext;
 import lombok.Data;
 import lombok.Getter;
 import net.froihofer.dsfinance.ws.trading.api.PublicStockQuote;
+import net.froihofer.util.jboss.entity.Holding;
 import net.froihofer.util.jboss.service.CustomerService;
 import net.froihofer.util.jboss.service.EmployeeService;
 
@@ -24,7 +25,7 @@ public class BankBean {
     private CustomerService customerService;
     @EJB
     private EmployeeService employeeService;
-    private Map<String, Double> portfolioSummary;
+    private List<Holding> portfolioSummary;
 
     private String symbol;
     private int shares;

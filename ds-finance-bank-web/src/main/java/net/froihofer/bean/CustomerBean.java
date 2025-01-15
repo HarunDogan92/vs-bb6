@@ -9,6 +9,7 @@ import jakarta.inject.Named;
 import lombok.Data;
 import net.froihofer.dsfinance.ws.trading.api.PublicStockQuote;
 import net.froihofer.util.jboss.entity.Customer;
+import net.froihofer.util.jboss.entity.Holding;
 import net.froihofer.util.jboss.service.CustomerService;
 import net.froihofer.util.jboss.service.EmployeeService;
 
@@ -33,7 +34,7 @@ public class CustomerBean {
     private EmployeeService employeeService;
     @EJB
     private CustomerService customerService;
-    private Map<String, Double> portfolioSummary;
+    private List<Holding> portfolioSummary;
     private String searchQuery;
     private List<PublicStockQuote> searchResults;
     private List<Customer> searchCustomer;
@@ -53,7 +54,7 @@ public class CustomerBean {
 
     public void searchCustomer() {
        try {
-           searchCustomer = customerService.searchCustomer(customerid, customername); // muss noch implemntiert werden
+           searchCustomer = customerService.searchCustomer(customerid, customername); // muss noch implementiert werden
             if (searchCustomer.isEmpty()) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_WARN, "Keine Ergebnisse", "Kein Kunde gefunden!"));
@@ -71,7 +72,7 @@ public class CustomerBean {
             searchResults = customerService.searchStocks(searchQuery);
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "fehler biem suchen", e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "fehler beim suchen", e.getMessage()));
             e.printStackTrace();
         }
     }
