@@ -65,24 +65,28 @@
                 <h:commandButton value="Suchen" action="#{bankBean.searchStocks}">
                     <f:ajax execute="@form" render="aktienSearch" />
                 </h:commandButton>
-            </h:form>
 
-            <h:panelGroup styleClass="search-results-container">
-                <h:dataTable id="aktienSearch" value="#{bankBean.searchResults}" var="stock">
-                    <h:column styleClass="kid-col">
-                        <f:facet name="header">Firma</f:facet>
-                        #{stock.companyName}
-                    </h:column>
-                    <h:column styleClass="name-col">
-                        <f:facet name="header">Letzter Kurs</f:facet>
-                        #{stock.lastTradePrice}
-                    </h:column>
-                    <h:column styleClass="address-col">
-                        <f:facet name="header">Marktkapitalisierung</f:facet>
-                        #{stock.marketCapitalization}
-                    </h:column>
-                </h:dataTable>
-            </h:panelGroup>
+                <h:panelGroup styleClass="search-results-container">
+                    <h:dataTable id="aktienSearch" value="#{bankBean.searchResults}" var="stock">
+                        <h:column styleClass="kid-col">
+                            <f:facet name="header">Firma</f:facet>
+                            #{stock.companyName}
+                        </h:column>
+                        <h:column styleClass="kid-col">
+                            <f:facet name="header">Symbol</f:facet>
+                            #{stock.symbol}
+                        </h:column>
+                        <h:column styleClass="name-col">
+                            <f:facet name="header">Letzter Kurs</f:facet>
+                            #{stock.lastTradePrice}
+                        </h:column>
+                        <h:column styleClass="address-col">
+                            <f:facet name="header">Marktkapitalisierung</f:facet>
+                            #{stock.marketCapitalization}
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+            </h:form>
         </h:panelGroup>
     </h:form>
 
