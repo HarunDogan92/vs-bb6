@@ -78,6 +78,4 @@ public class EmployeeBean implements Serializable {
         }
     }
 
-    public void selectCustomer() {
-    }
 }

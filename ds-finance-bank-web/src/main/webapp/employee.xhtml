@@ -43,7 +43,7 @@
                     #{result.address}
                 </h:column>
                 <h:column>
-                    <h:commandButton value="Auswählen" action="#{employeeBean.selectCustomer}">
+                    <h:commandButton value="Auswählen">
                         <f:setPropertyActionListener target="#{employeeBean.selectedCustomer}" value="#{result}" />
                         <f:ajax execute="@this" render="searchForm:selectedCustomerPanel" />
                     </h:commandButton>
