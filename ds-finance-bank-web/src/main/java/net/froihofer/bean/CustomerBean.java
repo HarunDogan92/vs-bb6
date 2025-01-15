@@ -46,9 +46,8 @@ public class CustomerBean {
             String username = context.getExternalContext().getUserPrincipal().getName();
             customerService.sellStock(symbol, shares, username);
         } catch (Exception e) {
-            e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "", e.getMessage()));
         }
     }
 

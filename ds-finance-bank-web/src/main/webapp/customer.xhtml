@@ -72,8 +72,9 @@
             </h:commandButton>
 
             <h:commandButton value="Aktien verkaufen" action="#{customerBean.sellStock}">
-                <f:ajax execute="@form" render="portfolioSummary" />
+                <f:ajax execute="@form" render="portfolioSummary messagesSell" />
             </h:commandButton>
+            <h:messages id="messagesSell" showDetail="true" style="color:red;" />
         </h:form>
     </h:panelGroup>
 </ui:composition>
