@@ -22,11 +22,10 @@
             <br />
 
             <h:commandButton value="Suchen" action="#{employeeBean.searchCustomer}">
-                <f:ajax execute="@form" render="searchResults messagesSearch" />
+                <f:ajax execute="@form" render="searchResults1 messagesSearch" />
             </h:commandButton>
 
             <h:messages id="messagesSearch" showDetail="true" style="color:red;" />
-        </h:form>
 
         <!-- Search Results Table -->
         <h:panelGroup styleClass="search-results-container">
@@ -43,8 +42,47 @@
                     <f:facet name="header">Adresse</f:facet>
                     #{result.address}
                 </h:column>
+                <h:column>
+                    <h:commandButton value="Auswählen" action="#{employeeBean.selectCustomer}">
+                        <f:setPropertyActionListener target="#{employeeBean.selectedCustomer}" value="#{result}" />
+                        <f:ajax execute="@this" render="searchForm:selectedCustomerPanel" />
+                    </h:commandButton>
+                </h:column>
             </h:dataTable>
         </h:panelGroup>
+
+    <h:panelGroup id="selectedCustomerPanel" styleClass="#{not empty employeeBean.selectedCustomer ? '' : 'hidden'}">
+        <h3>Kunde:</h3>
+        <h:outputText value="Name: #{employeeBean.selectedCustomer.firstName} #{employeeBean.selectedCustomer.lastName}" />
+        <br />
+        <h:outputText value="Adresse: #{employeeBean.selectedCustomer.address}" />
+        <br /><br />
+
+        <h3>Aktien suchen</h3>
+        <h:form id="stockSearchForm">
+            <h:outputLabel for="searchQuery" value="Aktie suchen: " />
+            <h:inputText id="searchQuery" value="#{customerBean.searchQuery}" />
+            <h:commandButton value="Suchen" action="#{customerBean.searchStocks}">
+                <f:ajax execute="@form" render="aktienSearch" />
+            </h:commandButton>
+        </h:form>
+
+        <h:dataTable id="aktienSearch" value="#{customerBean.searchResults}" var="stock">
+            <h:column>
+                <f:facet name="header">Firma</f:facet>
+                #{stock.companyName}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Letzter Kurs</f:facet>
+                #{stock.lastTradePrice}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Marktkapitalisierung</f:facet>
+                #{stock.marketCapitalization}
+            </h:column>
+        </h:dataTable>
+    </h:panelGroup>
+        </h:form>
 
     <!-- Neuer Kunde Form  -->
     <h3>Neuer Kunde</h3>
@@ -80,4 +118,10 @@
         <h:messages id="messagesAdd" showDetail="true" styleClass="jsf-messages" />
     </h:form>
 </h:panelGroup>
+
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
 </ui:composition>

@@ -2,6 +2,7 @@ package net.froihofer.bean;
 
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
@@ -11,12 +12,13 @@ import net.froihofer.util.jboss.entity.Customer;
 import net.froihofer.util.jboss.service.EmployeeService;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 @Named("employeeBean")
-@RequestScoped
+@SessionScoped
 @Data
-public class EmployeeBean {
+public class EmployeeBean implements Serializable {
     private Long id;
     private String username;
     private String password;
@@ -27,6 +29,7 @@ public class EmployeeBean {
     private int shares;
     private Long customerId;
     private String customerName;
+    private Customer selectedCustomer;
 
 
     @EJB
@@ -73,5 +76,8 @@ public class EmployeeBean {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
         }
+    }
+
+    public void selectCustomer() {
     }
 }
