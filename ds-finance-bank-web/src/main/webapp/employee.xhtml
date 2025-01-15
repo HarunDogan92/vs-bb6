@@ -1,14 +1,15 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets">
-    <h:panelGroup rendered="#{bankBean.userRole eq 'Employee'}">
+<h:panelGroup rendered="#{bankBean.userRole eq 'Employee'}">
         <h3>Role</h3>
         <h:outputText value="Your Role: #{bankBean.userRole}" />
         <br/><br/>
 
         <h3>Kundenmanagement</h3>
 
-        <h:form>
+        <h:form id="customerForm">
             <h:outputLabel for="firstName" value="Vorname: " />
             <h:inputText id="firstName" value="#{customerBean.firstName}" />
             <br/><br/>
@@ -33,7 +34,44 @@
             <h:inputText id="password" value="#{customerBean.password}" />
             <br/><br/>
 
-            <h:commandButton value="Kunde anlegen" action="#{customerBean.addCustomer}" />
+            <h:commandButton value="Kunde anlegen" action="#{customerBean.addCustomer}">
+                <f:ajax execute="@form" render="customerForm messages" />
+            </h:commandButton>
+
+            <h:messages id="messages" showDetail="true" style="color: green;" />
         </h:form>
+
+    <h3>Kundensuche</h3>
+
+    <h:form id="searchForm">
+        <h:outputLabel for="searchId" value="Kundennummer: " />
+        <h:inputText id="searchId" value="#{customerBean.customerid}" />
+        <br/><br/>
+
+        <h:outputLabel for="searchName" value="Name: " />
+        <h:inputText id="searchName" value="#{customerBean.customername}" />
+        <br/><br/>
+
+        <h:commandButton value="Suchen" action="#{customerBean.searchCustomer}">
+            <f:ajax execute="@form" render="searchResults1 messages1" />
+        </h:commandButton>
+
+        <h:messages id="messages1" showDetail="true" style="color: red;" />
+    </h:form>
+
+    <h:dataTable id="searchResults1" value="#{customerBean.searchCustomer}" var="result">
+        <h:column>
+            <f:facet name="header">Kundennummer</f:facet>
+            #{result.id}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Name</f:facet>
+            #{result.firstName} #{result.lastName}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Adresse</f:facet>
+            #{result.address}
+        </h:column>
+    </h:dataTable>
     </h:panelGroup>
 </ui:composition>

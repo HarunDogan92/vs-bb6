@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import net.froihofer.dsfinance.ws.trading.api.PublicStockQuote;
 import net.froihofer.dsfinance.ws.trading.api.TradingWSException_Exception;
 import net.froihofer.util.jboss.entity.Bank;
+import net.froihofer.util.jboss.entity.Customer;
 import net.froihofer.util.jboss.entity.TradingHistory;
 
 import java.util.List;
@@ -42,6 +43,15 @@ public class CustomerService {
 
     public List<PublicStockQuote> searchStocks(String companyName) throws TradingWSException_Exception {
         return webService.findStockQuotesByCompanyName(companyName);
+    }
+
+    public List<Customer> searchCustomer(Long id, String name) {
+        String query = "SELECT c FROM Customer c WHERE (:id IS NULL OR c.id = :id) " +
+                "AND (:name IS NULL OR LOWER(c.firstName) LIKE LOWER(CONCAT('%', :name, '%')))";
+        return em.createQuery(query, Customer.class)
+                .setParameter("id", id)
+                .setParameter("name", name)
+                .getResultList();
     }
 
 
