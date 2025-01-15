@@ -11,30 +11,30 @@
 
         <h:form id="customerForm">
             <h:outputLabel for="firstName" value="Vorname: " />
-            <h:inputText id="firstName" value="#{customerBean.firstName}" />
+            <h:inputText id="firstName" value="#{employeeBean.firstName}" />
             <br/><br/>
 
             <h:outputLabel for="lastName" value="Nachname: " />
-            <h:inputText id="lastName" value="#{customerBean.lastName}" />
+            <h:inputText id="lastName" value="#{employeeBean.lastName}" />
             <br/><br/>
 
             <h:outputLabel for="address" value="Adresse: " />
-            <h:inputText id="address" value="#{customerBean.address}" />
+            <h:inputText id="address" value="#{employeeBean.address}" />
             <br/><br/>
 
             <h:outputLabel for="customerId" value="Kundennummer: " />
-            <h:inputText id="customerId" value="#{customerBean.id}" />
+            <h:inputText id="customerId" value="#{employeeBean.id}" />
             <br/><br/>
 
             <h:outputLabel for="username" value="Username: " />
-            <h:inputText id="username" value="#{customerBean.username}" />
+            <h:inputText id="username" value="#{employeeBean.username}" />
             <br/><br/>
 
             <h:outputLabel for="password" value="Passwort: " />
-            <h:inputText id="password" value="#{customerBean.password}" />
+            <h:inputText id="password" value="#{employeeBean.password}" />
             <br/><br/>
 
-            <h:commandButton value="Kunde anlegen" action="#{customerBean.addCustomer}">
+            <h:commandButton value="Kunde anlegen" action="#{employeeBean.addCustomer}">
                 <f:ajax execute="@form" render="customerForm messages" />
             </h:commandButton>
 
@@ -45,21 +45,21 @@
 
     <h:form id="searchForm">
         <h:outputLabel for="searchId" value="Kundennummer: " />
-        <h:inputText id="searchId" value="#{customerBean.customerid}" />
+        <h:inputText id="searchId" value="#{employeeBean.customerId}" />
         <br/><br/>
 
         <h:outputLabel for="searchName" value="Name: " />
-        <h:inputText id="searchName" value="#{customerBean.customername}" />
+        <h:inputText id="searchName" value="#{employeeBean.customerName}" />
         <br/><br/>
 
-        <h:commandButton value="Suchen" action="#{customerBean.searchCustomer}">
+        <h:commandButton value="Suchen" action="#{employeeBean.searchCustomer}">
             <f:ajax execute="@form" render="searchResults1 messages1" />
         </h:commandButton>
 
         <h:messages id="messages1" showDetail="true" style="color: red;" />
     </h:form>
 
-    <h:dataTable id="searchResults1" value="#{customerBean.searchCustomer}" var="result">
+    <h:dataTable id="searchResults1" value="#{employeeBean.searchCustomer}" var="result">
         <h:column>
             <f:facet name="header">Kundennummer</f:facet>
             #{result.id}

@@ -55,28 +55,18 @@ public class CustomerService {
         return webService.findStockQuotesByCompanyName(companyName);
     }
 
-    public List<Customer> searchCustomer(Long id, String name) {
-        String query = "SELECT c FROM Customer c WHERE (:id IS NULL OR c.id = :id) " +
-                "AND (:name IS NULL OR " +
-                "LOWER(c.firstName) LIKE LOWER(CONCAT('%', :name, '%')) OR " +
-                "LOWER(c.lastName) LIKE LOWER(CONCAT('%', :name, '%')))";
-        return em.createQuery(query, Customer.class)
-                .setParameter("id", id)
-                .setParameter("name", name)
-                .getResultList();
-    }
-
-    public List<Holding> getPortfolioSummary(String username) {
+    public List<Holding> getHoldings(String username) {
         return getCustomerByUsername(username).getDepot().getHoldings();
     }
 
     public void sellStock(String symbol, int shares, String username) throws TradingWSException_Exception {
         Bank bank = getBank();
+        String symbolUpper = symbol.toUpperCase();
         Customer customer = getCustomerByUsername(username);
-        double totalCost = getTotalCost(symbol, shares);
+        double totalCost = getTotalCost(symbolUpper, shares);
 
-        holdingService.sell(symbol, shares, customer.getDepot());
-        webService.sellStock(symbol, shares);
+        holdingService.sell(symbolUpper, shares, customer.getDepot());
+        webService.sellStock(symbolUpper, shares);
         bank.setAvailableVolume(bank.getAvailableVolume() + totalCost);
         em.merge(bank);
 
@@ -84,7 +74,7 @@ public class CustomerService {
         String role = context.getExternalContext().isUserInRole("employee") ? "Employee" : "Customer";
 
         TradingHistory tradingHistory = TradingHistory.builder()
-                .symbol(symbol)
+                .symbol(symbolUpper)
                 .shares(-shares)
                 .availableVolume(bank.getAvailableVolume())
                 .username(username)
@@ -100,14 +90,15 @@ public class CustomerService {
 
     public void buyStock(String symbol, int shares, String username) throws TradingWSException_Exception {
         Bank bank = getBank();
+        String symbolUpper = symbol.toUpperCase();
         Customer customer = getCustomerByUsername(username);
-        double totalCost = getTotalCost(symbol, shares);
+        double totalCost = getTotalCost(symbolUpper, shares);
         if (bank.getAvailableVolume() < totalCost) {
             throw new IllegalArgumentException("Nicht genügend Guthaben, um die Aktien zu kaufen!");
         }
 
-        holdingService.buy(symbol, shares, customer.getDepot());
-        webService.buyStock(symbol, shares);
+        holdingService.buy(symbolUpper, shares, customer.getDepot());
+        webService.buyStock(symbolUpper, shares);
         bank.setAvailableVolume(bank.getAvailableVolume() - totalCost);
         em.merge(bank);
 
@@ -115,7 +106,7 @@ public class CustomerService {
         String role = context.getExternalContext().isUserInRole("employee") ? "Employee" : "Customer";
 
         TradingHistory tradingHistory = TradingHistory.builder()
-                .symbol(symbol)
+                .symbol(symbolUpper)
                 .shares(shares)
                 .availableVolume(bank.getAvailableVolume())
                 .username(username)

@@ -11,6 +11,7 @@ import net.froihofer.util.jboss.entity.Customer;
 import net.froihofer.util.jboss.entity.Depot;
 
 import java.io.IOException;
+import java.util.List;
 
 @Stateless
 @RolesAllowed({"employee"})
@@ -49,6 +50,20 @@ public class EmployeeService {
         em.persist(customer);
 
         authDBHelper.addUser(username, password, new String[]{"customer"});
+    }
+
+
+    public List<Customer> searchCustomer(Long id, String name) {
+        String query = "SELECT c FROM Customer c WHERE (:id IS NULL OR c.id = :id) " +
+                "AND (:name IS NULL " +
+                "OR LOWER(c.firstName) LIKE LOWER(CONCAT('%', :name, '%')) " +
+                "OR LOWER(c.lastName) LIKE LOWER(CONCAT('%', :name, '%')) " +
+                "OR LOWER(CONCAT(c.firstName, ' ', c.lastName)) LIKE LOWER(CONCAT('%', :name, '%')))";
+
+        return em.createQuery(query, Customer.class)
+                .setParameter("id", id)
+                .setParameter("name", name)
+                .getResultList();
     }
 
     //public void showportfolio (user)

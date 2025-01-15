@@ -33,9 +33,9 @@
 
         <h3>mein portfolio</h3>
         <h:form id="portfolioSummary">
-            <h:dataTable value="#{customerBean.portfolioSummary}" var="entry">
+            <h:dataTable value="#{customerBean.holdings}" var="entry">
                 <h:column>
-                    <f:facet name="header">Stock Symbol (shares)</f:facet>
+                    <f:facet name="header">Stock Symbol</f:facet>
                     #{entry.symbol}
                 </h:column>
                 <h:column>

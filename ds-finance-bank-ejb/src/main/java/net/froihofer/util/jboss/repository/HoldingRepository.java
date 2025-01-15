@@ -19,11 +19,10 @@ public class HoldingRepository {
                 "SELECT h FROM Holding h WHERE h.depot = :depot AND h.symbol = :symbol", Holding.class);
         query.setParameter("depot", depot);
         query.setParameter("symbol", symbol);
-
         try {
             return query.getSingleResult();
         } catch (Exception e) {
-            return null; // Gibt null zurück, wenn kein Holding gefunden wurde
+            return null;
         }
     }
 }

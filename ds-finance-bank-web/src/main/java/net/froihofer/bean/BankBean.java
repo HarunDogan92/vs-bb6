@@ -7,29 +7,17 @@ import jakarta.inject.Named;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import lombok.Data;
-import lombok.Getter;
-import net.froihofer.dsfinance.ws.trading.api.PublicStockQuote;
 import net.froihofer.util.jboss.entity.Holding;
 import net.froihofer.util.jboss.service.CustomerService;
 import net.froihofer.util.jboss.service.EmployeeService;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Named("bankBean")
 @RequestScoped
 @Data
 public class BankBean {
-    @EJB
-    private CustomerService customerService;
-    @EJB
-    private EmployeeService employeeService;
-    private List<Holding> portfolioSummary;
-
-    private String symbol;
-    private int shares;
-
     public String getUsername() {
         FacesContext context = FacesContext.getCurrentInstance();
         return context.getExternalContext().getUserPrincipal() != null
@@ -45,44 +33,6 @@ public class BankBean {
             return "Customer";
         }
         return "Unknown";
-    }
-
-    @PostConstruct
-    public void init() {
-        loadPortfolioSummary();
-    }
-
-    public void loadPortfolioSummary() {
-        try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            String username = context.getExternalContext().getUserPrincipal().getName();
-            portfolioSummary = customerService.getPortfolioSummary(username);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void buyStockForCustomer(String username) {
-        try {
-            employeeService.buyStockForCustomer(symbol, shares, username);
-            loadPortfolioSummary();
-        } catch (Exception e) {
-            e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
-        }
-    }
-
-    public void sellStockForCustomer(String username) {
-        try {
-            employeeService.sellStockForCustomer(symbol, shares, username);
-            loadPortfolioSummary();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
-        }
     }
 
     public void logout() {

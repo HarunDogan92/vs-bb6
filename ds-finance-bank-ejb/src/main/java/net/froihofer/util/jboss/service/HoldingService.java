@@ -47,8 +47,12 @@ public class HoldingService {
             throw new IllegalArgumentException("Holding nicht vorhanden!");
         }
 
+        if(holding.getShares() < shares) {
+            throw new IllegalArgumentException("Es sind nicht genug shares vorhanden!");
+        }
+
         holding.setShares(holding.getShares()-shares);
-        if (holding.getShares() <= 0) {
+        if (holding.getShares() == 0) {
             depot.getHoldings().remove(holding);
             em.merge(depot);
         } else {
