@@ -1,13 +1,23 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7; /* Light background */
+    color: #333;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    background-color: #e3e3e3; /* Light gray background for header */
+    padding: 10px 15px;
+    border-radius: 4px;
 }
 
 .header .username {
     font-size: 16px;
     font-weight: bold;
+    color: #004466; /* Darker shade of blue for text */
 }
 
 .header .logout {
@@ -18,6 +28,9 @@
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #e3e3e3;
+    border-radius: 4px;
 }
 
 table {
@@ -33,10 +46,91 @@ th, td {
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: #d1e0e0; /* Light blue-gray */
+    color: #003344;           /* Slightly darker text */
+    font-weight: bold;
 }
 
-input[type="submit"] {
+input[type="submit"],
+button,
+h\:commandButton{
+    background-color: #c2d6d6; /* Light blue-gray */
+    color: #003344;
+    border: none;
+    padding: 10px 15px;
     margin-right: 10px;
     margin-bottom: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+input[type="submit"]:hover,
+button:hover,
+h\:commandButton:hover {
+    background-color: #a8c2c2; /* Slightly darker on hover */
+}
+
+
+input[type="submit"]:active,
+button:active,
+h\:commandButton:active {
+    background-color: #8eaead; /* darker when clicked */
+    transform: scale(0.98); /* click effect */
+    transition: transform 0.1s;
+}
+
+
+input[type="text"] {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Search form container */
+.search-form {
+    width: 600px;          /* limit width */
+    margin-bottom: 20px;   /* spacing from other sections */
+}
+
+/*Search results table container */
+.search-results-container {
+    width: 600px; /* narrower than full page if you want */
+    margin-top: 20px;
+}
+
+
+.kid-col {
+    width: 80px;  /* small column for Kundennummer */
+}
+.name-col {
+    width: 150px; /* normal column for Name */
+}
+.address-col {
+    width: 200px; /* longer column for Adresse*/
+}
+
+/* 4) New Customer form container  */
+.new-customer-form {
+    width: 1000px; /* limit width */
+    margin-top: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+/* PanelGrid style for spacing in label/field cells */
+h\:panelGrid td {
+    vertical-align: middle;
+    padding: 6px 10px;
+}
+
+/* style for messages */
+.jsf-messages {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.4;
 }

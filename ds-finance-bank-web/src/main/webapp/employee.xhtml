@@ -3,75 +3,81 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets">
 <h:panelGroup rendered="#{bankBean.userRole eq 'Employee'}">
-        <h3>Role</h3>
-        <h:outputText value="Your Role: #{bankBean.userRole}" />
-        <br/><br/>
+    <!-- Header with the user's role -->
+        <h:panelGroup styleClass="header">
+            <h3>Role:
+                <h:outputText value="#{bankBean.userRole}" />
+            </h3>
+        </h:panelGroup>
+        <!-- Kundensuche Section -->
+        <h3>Kundensuche</h3>
+        <h:form id="searchForm" styleClass="search-form">
+            <h:panelGrid columns="4" >
+                <h:outputLabel for="searchId" value="Kundennummer:" />
+                <h:inputText id="searchId" value="#{employeeBean.customerId}" />
 
-        <h3>Kundenmanagement</h3>
+                <h:outputLabel for="searchName" value="Name:" />
+                <h:inputText id="searchName" value="#{employeeBean.customerName}" />
+            </h:panelGrid>
+            <br />
 
-        <h:form id="customerForm">
-            <h:outputLabel for="firstName" value="Vorname: " />
-            <h:inputText id="firstName" value="#{employeeBean.firstName}" />
-            <br/><br/>
-
-            <h:outputLabel for="lastName" value="Nachname: " />
-            <h:inputText id="lastName" value="#{employeeBean.lastName}" />
-            <br/><br/>
-
-            <h:outputLabel for="address" value="Adresse: " />
-            <h:inputText id="address" value="#{employeeBean.address}" />
-            <br/><br/>
-
-            <h:outputLabel for="customerId" value="Kundennummer: " />
-            <h:inputText id="customerId" value="#{employeeBean.id}" />
-            <br/><br/>
-
-            <h:outputLabel for="username" value="Username: " />
-            <h:inputText id="username" value="#{employeeBean.username}" />
-            <br/><br/>
-
-            <h:outputLabel for="password" value="Passwort: " />
-            <h:inputText id="password" value="#{employeeBean.password}" />
-            <br/><br/>
-
-            <h:commandButton value="Kunde anlegen" action="#{employeeBean.addCustomer}">
-                <f:ajax execute="@form" render="customerForm messages" />
+            <h:commandButton value="Suchen" action="#{employeeBean.searchCustomer}">
+                <f:ajax execute="@form" render="searchResults messagesSearch" />
             </h:commandButton>
 
-            <h:messages id="messages" showDetail="true" style="color: green;" />
+            <h:messages id="messagesSearch" showDetail="true" style="color:red;" />
         </h:form>
 
-    <h3>Kundensuche</h3>
+        <!-- Search Results Table -->
+        <h:panelGroup styleClass="search-results-container">
+            <h:dataTable id="searchResults1" value="#{employeeBean.searchCustomer}" var="result">
+                <h:column styleClass="kid-col">
+                    <f:facet name="header">Kundennummer</f:facet>
+                    #{result.id}
+                </h:column>
+                <h:column styleClass="name-col">
+                    <f:facet name="header">Name</f:facet>
+                    #{result.firstName} #{result.lastName}
+                </h:column>
+                <h:column styleClass="address-col">
+                    <f:facet name="header">Adresse</f:facet>
+                    #{result.address}
+                </h:column>
+            </h:dataTable>
+        </h:panelGroup>
 
-    <h:form id="searchForm">
-        <h:outputLabel for="searchId" value="Kundennummer: " />
-        <h:inputText id="searchId" value="#{employeeBean.customerId}" />
-        <br/><br/>
+    <!-- Neuer Kunde Form  -->
+    <h3>Neuer Kunde</h3>
+    <h:form id="customerForm" styleClass="new-customer-form">
+        <!-- panelGrid with 2 columns  -->
+        <h:panelGrid columns="6" >
 
-        <h:outputLabel for="searchName" value="Name: " />
-        <h:inputText id="searchName" value="#{employeeBean.customerName}" />
-        <br/><br/>
+            <!-- Row 1 -->
+            <h:outputLabel for="customerId" value="Kundennummer:" />
+            <h:inputText id="customerId" value="#{employeeBean.id}" />
 
-        <h:commandButton value="Suchen" action="#{employeeBean.searchCustomer}">
-            <f:ajax execute="@form" render="searchResults1 messages1" />
+            <h:outputLabel for="firstName" value="Vorname:" />
+            <h:inputText id="firstName" value="#{employeeBean.firstName}" />
+
+            <h:outputLabel for="lastName" value="Nachname:" />
+            <h:inputText id="lastName" value="#{employeeBean.lastName}" />
+
+            <!-- Row 2 -->
+            <h:outputLabel for="address" value="Adresse:" />
+            <h:inputText id="address" value="#{employeeBean.address}" />
+
+            <h:outputLabel for="username" value="Username:" />
+            <h:inputText id="username" value="#{employeeBean.username}" />
+
+            <h:outputLabel for="password" value="Passwort:" />
+            <h:inputText id="password" value="#{employeeBean.password}" />
+        </h:panelGrid>
+
+        <br />
+        <h:commandButton value="Kunde anlegen" action="#{employeeBean.addCustomer}">
+            <f:ajax execute="@form" render="@form messagesAdd" />
         </h:commandButton>
-
-        <h:messages id="messages1" showDetail="true" style="color: red;" />
+        <h:messages id="messagesAdd" showDetail="true" styleClass="jsf-messages" />
     </h:form>
-
-    <h:dataTable id="searchResults1" value="#{employeeBean.searchCustomer}" var="result">
-        <h:column>
-            <f:facet name="header">Kundennummer</f:facet>
-            #{result.id}
-        </h:column>
-        <h:column>
-            <f:facet name="header">Name</f:facet>
-            #{result.firstName} #{result.lastName}
-        </h:column>
-        <h:column>
-            <f:facet name="header">Adresse</f:facet>
-            #{result.address}
-        </h:column>
-    </h:dataTable>
-    </h:panelGroup>
+</h:panelGroup>
 </ui:composition>

@@ -4,7 +4,6 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Data;
 import net.froihofer.dsfinance.ws.trading.api.PublicStockQuote;
@@ -23,8 +22,6 @@ public class CustomerBean {
     private List<PublicStockQuote> searchResults;
     private String searchQuery;
 
-    @EJB
-    private EmployeeService employeeService;
     @EJB
     private CustomerService customerService;
 

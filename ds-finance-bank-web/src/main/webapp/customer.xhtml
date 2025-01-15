@@ -3,33 +3,41 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets">
     <h:panelGroup rendered="#{bankBean.userRole eq 'Customer'}">
-        <h3>Role</h3>
-        <h:outputText value="Your Role: #{bankBean.userRole}" />
-        <br/><br/>
+        <h:panelGroup >
+            <h3>Role:
+                <h:outputText value="#{bankBean.userRole}" />
+            </h3>
+        </h:panelGroup>
+
 
         <h3>Aktien suchen</h3>
-        <h:form>
-            <h:outputLabel for="searchQuery" value="Aktie suchen: " />
-            <h:inputText id="searchQuery" value="#{customerBean.searchQuery}" />
+        <h:form styleClass="search-form">
+            <h:panelGrid columns="2">
+                <h:outputLabel for="searchQuery" value="Aktie suchen:" />
+                <h:inputText id="searchQuery" value="#{customerBean.searchQuery}" />
+            </h:panelGrid>
+
             <h:commandButton value="Suchen" action="#{customerBean.searchStocks}">
                 <f:ajax execute="@form" render="searchResults" />
             </h:commandButton>
         </h:form>
 
-        <h:dataTable id="searchResults" value="#{customerBean.searchResults}" var="stock">
-            <h:column>
-                <f:facet name="header">Firma</f:facet>
-                #{stock.companyName}
-            </h:column>
-            <h:column>
-                <f:facet name="header">Letzter Kurs</f:facet>
-                #{stock.lastTradePrice}
-            </h:column>
-            <h:column>
-                <f:facet name="header">Marktkapitalisierung</f:facet>
-                #{stock.marketCapitalization}
-            </h:column>
-        </h:dataTable>
+        <h:panelGroup styleClass="search-results-container">
+            <h:dataTable id="searchResults" value="#{customerBean.searchResults}" var="stock">
+                <h:column>
+                    <f:facet name="header">Firma</f:facet>
+                    #{stock.companyName}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Letzter Kurs</f:facet>
+                    #{stock.lastTradePrice}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Marktkapitalisierung</f:facet>
+                    #{stock.marketCapitalization}
+                </h:column>
+            </h:dataTable>
+        </h:panelGroup>
 
         <h3>mein portfolio</h3>
         <h:form id="portfolioSummary">
@@ -49,19 +57,20 @@
             </h:dataTable>
         </h:form>
 
-        <h:form>
-            <h3>Buy Stocks</h3>
-            <h:outputLabel for="symbol" value="Stock Symbol: " />
-            <h:inputText id="symbol" value="#{customerBean.symbol}" />
-            <br/><br/>
+        <h3>Buy Stocks</h3>
+        <h:form style="width:600px;">
+            <h:panelGrid columns="2">
+                <h:outputLabel for="symbol" value="Stock Symbol:" />
+                <h:inputText id="symbol" value="#{customerBean.symbol}" />
 
-            <h:outputLabel for="shares" value="Number of Shares: " />
-            <h:inputText id="shares" value="#{customerBean.shares}" />
-            <br/><br/>
+                <h:outputLabel for="shares" value="Number of Shares:" />
+                <h:inputText id="shares" value="#{customerBean.shares}" />
+            </h:panelGrid>
 
             <h:commandButton value="Buy Stock" action="#{customerBean.buyStock}">
                 <f:ajax execute="@form" render="portfolioSummary" />
             </h:commandButton>
+
             <h:commandButton value="Aktien verkaufen" action="#{customerBean.sellStock}">
                 <f:ajax execute="@form" render="portfolioSummary" />
             </h:commandButton>
