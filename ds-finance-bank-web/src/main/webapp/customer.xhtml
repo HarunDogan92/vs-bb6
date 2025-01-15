@@ -52,8 +52,14 @@
                 </h:column>
                 <h:column>
                     <f:facet name="header">Total Value</f:facet>
-                    #{customerBean.customerService.getTotalCost(entry.symbol, entry.shares)}
+                    #{customerBean.getStockCost(entry.symbol, entry.shares)}
                 </h:column>
+                <f:facet name="footer">
+                    <h:panelGrid columns="2" style="width: 100%;">
+                        <h:outputText value="Gesamtwert:" style="font-weight: bold;" />
+                        <h:outputText value="#{customerBean.totalValue}" style="text-align: right;" />
+                    </h:panelGrid>
+                </f:facet>
             </h:dataTable>
         </h:form>
 

@@ -27,7 +27,6 @@ public class EmployeeService {
 
     private WildflyAuthDBHelper authDBHelper = new WildflyAuthDBHelper();
 
-
     public void sellStockForCustomer(String symbol, int shares, String username) throws TradingWSException_Exception {
         customerService.sellStock(symbol, shares, username);
     }

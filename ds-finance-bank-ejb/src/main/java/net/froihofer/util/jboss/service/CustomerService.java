@@ -59,15 +59,23 @@ public class CustomerService {
         return getCustomerByUsername(username).getDepot().getHoldings();
     }
 
+    public double getTotalValue(String username) throws TradingWSException_Exception {
+        double totalCost = 0;
+        for (Holding holding : getHoldings(username)) {
+            totalCost+=getStockCost(holding.getSymbol(), holding.getShares());
+        }
+        return totalCost;
+    }
+
     public void sellStock(String symbol, int shares, String username) throws TradingWSException_Exception {
         Bank bank = getBank();
         String symbolUpper = symbol.toUpperCase();
         Customer customer = getCustomerByUsername(username);
-        double totalCost = getTotalCost(symbolUpper, shares);
+        double stockCost = getStockCost(symbolUpper, shares);
 
         holdingService.sell(symbolUpper, shares, customer.getDepot());
         webService.sellStock(symbolUpper, shares);
-        bank.setAvailableVolume(bank.getAvailableVolume() + totalCost);
+        bank.setAvailableVolume(bank.getAvailableVolume() + stockCost);
         em.merge(bank);
 
         FacesContext context = FacesContext.getCurrentInstance();
@@ -84,7 +92,7 @@ public class CustomerService {
         em.persist(tradingHistory);
     }
 
-    public double getTotalCost(String symbol, int shares) throws TradingWSException_Exception {
+    public double getStockCost(String symbol, int shares) throws TradingWSException_Exception {
         return webService.getLastTradePriceBySymbol(symbol) * shares;
     }
 
@@ -92,14 +100,14 @@ public class CustomerService {
         Bank bank = getBank();
         String symbolUpper = symbol.toUpperCase();
         Customer customer = getCustomerByUsername(username);
-        double totalCost = getTotalCost(symbolUpper, shares);
-        if (bank.getAvailableVolume() < totalCost) {
+        double stockCost = getStockCost(symbolUpper, shares);
+        if (bank.getAvailableVolume() < stockCost) {
             throw new IllegalArgumentException("Nicht genügend Guthaben, um die Aktien zu kaufen!");
         }
 
         holdingService.buy(symbolUpper, shares, customer.getDepot());
         webService.buyStock(symbolUpper, shares);
-        bank.setAvailableVolume(bank.getAvailableVolume() - totalCost);
+        bank.setAvailableVolume(bank.getAvailableVolume() - stockCost);
         em.merge(bank);
 
         FacesContext context = FacesContext.getCurrentInstance();
