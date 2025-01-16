@@ -65,7 +65,7 @@
 
             <h3>Portfolio</h3>
             <h:form id="portfolioEmployee">
-                <h:dataTable value="#{employeeBean.getHoldingsForCustomer(employeeBean.selectedCustomer.username)}" var="entry">
+                <h:dataTable value="#{not empty employeeBean.selectedCustomer.depot ? employeeBean.getHoldingsForCustomer(employeeBean.selectedCustomer.username) : []}" var="entry">
                     <h:column>
                         <f:facet name="header">Stock Symbol</f:facet>
                         #{entry.symbol}
@@ -78,6 +78,12 @@
                         <f:facet name="header">Total Value</f:facet>
                         #{bankBean.getStockCost(entry.symbol, entry.shares)}
                     </h:column>
+                    <f:facet name="footer">
+                        <h:panelGrid columns="2" style="width: 100%;">
+                            <h:outputText value="Gesamtwert:" style="font-weight: bold;" />
+                            <h:outputText value="#{employeeBean.totalValue}" style="text-align: right;" />
+                        </h:panelGrid>
+                    </f:facet>
                 </h:dataTable>
             </h:form>
 

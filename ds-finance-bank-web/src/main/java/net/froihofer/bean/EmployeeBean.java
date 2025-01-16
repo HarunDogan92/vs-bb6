@@ -92,4 +92,10 @@ public class EmployeeBean implements Serializable {
         return employeeService.getAvailableVolume();
     }
 
+    public double getTotalValue() {
+        if(selectedCustomer != null)
+            return bankBean.getTotalValue(selectedCustomer.getUsername());
+        return 0;
+    }
+
 }

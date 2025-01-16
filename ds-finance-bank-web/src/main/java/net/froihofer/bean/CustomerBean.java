@@ -36,13 +36,7 @@ public class CustomerBean {
     }
 
     public double getTotalValue() {
-        try {
-            return customerService.getTotalValue(getUsername());
-        } catch (TradingWSException_Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler beim berechnen des Gesamtwerts vom Depot", e.getMessage()));
-        }
-        return 0;
+        return bankBean.getTotalValue(getUsername());
     }
 
     public void buyStock() {

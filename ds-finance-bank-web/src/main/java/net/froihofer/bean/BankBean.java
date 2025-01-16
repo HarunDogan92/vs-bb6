@@ -52,6 +52,16 @@ public class BankBean implements Serializable {
         return customerService.getHoldings(username);
     }
 
+    public double getTotalValue(String username) {
+        try {
+            return customerService.getTotalValue(username);
+        } catch (TradingWSException_Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler beim berechnen des Gesamtwerts vom Depot", e.getMessage()));
+        }
+        return 0;
+    }
+
     public String getUsername() {
         FacesContext context = FacesContext.getCurrentInstance();
         return context.getExternalContext().getUserPrincipal() != null

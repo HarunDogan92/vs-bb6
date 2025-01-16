@@ -42,7 +42,7 @@ public class WebService {
     public double getLastTradePriceBySymbol(String symbol) throws TradingWSException_Exception {
         init();
         try {
-            List<PublicStockQuote> stockQuotes = tradingWebService.findStockQuotesByCompanyName(symbol);
+            List<PublicStockQuote> stockQuotes = tradingWebService.getStockQuoteHistory(symbol);
 
             if (stockQuotes.isEmpty()) {
                 throw new IllegalStateException("No stock quotes found for symbol: " + symbol);
