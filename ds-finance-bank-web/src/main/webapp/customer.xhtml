@@ -52,7 +52,7 @@
                 </h:column>
                 <h:column>
                     <f:facet name="header">Total Value</f:facet>
-                    #{customerBean.getStockCost(entry.symbol, entry.shares)}
+                    #{bankBean.getStockCost(entry.symbol, entry.shares)}
                 </h:column>
                 <f:facet name="footer">
                     <h:panelGrid columns="2" style="width: 100%;">

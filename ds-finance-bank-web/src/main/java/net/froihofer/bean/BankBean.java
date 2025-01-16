@@ -9,6 +9,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import lombok.Data;
 import net.froihofer.dsfinance.ws.trading.api.PublicStockQuote;
+import net.froihofer.dsfinance.ws.trading.api.TradingWSException_Exception;
 import net.froihofer.util.jboss.entity.Holding;
 import net.froihofer.util.jboss.service.CustomerService;
 import net.froihofer.util.jboss.service.EmployeeService;
@@ -36,6 +37,20 @@ public class BankBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "fehler beim suchen", e.getMessage()));
             e.printStackTrace();
         }
+    }
+
+    public double getStockCost(String symbol, int shares) {
+        try {
+            return customerService.getStockCost(symbol, shares);
+        } catch (TradingWSException_Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler beim berechnen des Werts der Aktie", e.getMessage()));
+        }
+        return 0;
+    }
+
+    public List<Holding> getHoldings(String username) {
+        return customerService.getHoldings(username);
     }
 
     public String getUsername() {

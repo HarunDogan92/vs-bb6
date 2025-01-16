@@ -58,35 +58,74 @@
             <h:outputText value="Adresse: #{employeeBean.selectedCustomer.address}" />
             <br /><br />
 
-            <h3>Aktien suchen</h3>
-            <h:form id="stockSearchForm">
-                <h:outputLabel for="searchQuery" value="Aktie suchen: " />
-                <h:inputText id="searchQuery" value="#{bankBean.searchQuery}" />
-                <h:commandButton value="Suchen" action="#{bankBean.searchStocks}">
-                    <f:ajax execute="@form" render="aktienSearch" />
+            <h3>Portfolio</h3>
+            <h:form id="portfolioSummary">
+                <h:dataTable value="#{employeeBean.getHoldingsForCustomer(employeeBean.selectedCustomer.username)}" var="entry">
+                    <h:column>
+                        <f:facet name="header">Stock Symbol</f:facet>
+                        #{entry.symbol}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Shares</f:facet>
+                        #{entry.shares}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Total Value</f:facet>
+                        #{bankBean.getStockCost(entry.symbol, entry.shares)}
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+
+            <h3>Buy Stocks</h3>
+            <h:form style="width:600px;">
+                <h:panelGrid columns="2">
+                    <h:outputLabel for="symbol" value="Stock Symbol:" />
+                    <h:inputText id="symbol" value="#{employeeBean.symbol}" />
+
+                    <h:outputLabel for="shares" value="Number of Shares:" />
+                    <h:inputText id="shares" value="#{employeeBean.shares}" />
+                </h:panelGrid>
+
+                <h:commandButton value="Buy Stock" action="#{employeeBean.buyStockForCustomer}">
+                    <f:ajax execute="@form" render="portfolioSummary" />
                 </h:commandButton>
 
-                <h:panelGroup styleClass="search-results-container">
-                    <h:dataTable id="aktienSearch" value="#{bankBean.searchResults}" var="stock">
-                        <h:column styleClass="kid-col">
-                            <f:facet name="header">Firma</f:facet>
-                            #{stock.companyName}
-                        </h:column>
-                        <h:column styleClass="kid-col">
-                            <f:facet name="header">Symbol</f:facet>
-                            #{stock.symbol}
-                        </h:column>
-                        <h:column styleClass="name-col">
-                            <f:facet name="header">Letzter Kurs</f:facet>
-                            #{stock.lastTradePrice}
-                        </h:column>
-                        <h:column styleClass="address-col">
-                            <f:facet name="header">Marktkapitalisierung</f:facet>
-                            #{stock.marketCapitalization}
-                        </h:column>
-                    </h:dataTable>
-                </h:panelGroup>
+                <h:commandButton value="Aktien verkaufen" action="#{employeeBean.sellStockForCustomer}">
+                    <f:ajax execute="@form" render="portfolioSummary messagesSell" />
+                </h:commandButton>
+                <h:messages id="messagesSell" showDetail="true" style="color:red;" />
             </h:form>
+
+        </h:panelGroup>
+    </h:form>
+
+    <h3>Aktien suchen</h3>
+    <h:form id="stockSearchForm">
+        <h:outputLabel for="searchQuery" value="Aktie suchen: " />
+        <h:inputText id="searchQuery" value="#{bankBean.searchQuery}" />
+        <h:commandButton value="Suchen" action="#{bankBean.searchStocks}">
+            <f:ajax execute="@form" render="aktienSearch" />
+        </h:commandButton>
+
+        <h:panelGroup styleClass="search-results-container">
+            <h:dataTable id="aktienSearch" value="#{bankBean.searchResults}" var="stock">
+                <h:column styleClass="kid-col">
+                    <f:facet name="header">Firma</f:facet>
+                    #{stock.companyName}
+                </h:column>
+                <h:column styleClass="kid-col">
+                    <f:facet name="header">Symbol</f:facet>
+                    #{stock.symbol}
+                </h:column>
+                <h:column styleClass="name-col">
+                    <f:facet name="header">Letzter Kurs</f:facet>
+                    #{stock.lastTradePrice}
+                </h:column>
+                <h:column styleClass="address-col">
+                    <f:facet name="header">Marktkapitalisierung</f:facet>
+                    #{stock.marketCapitalization}
+                </h:column>
+            </h:dataTable>
         </h:panelGroup>
     </h:form>
 

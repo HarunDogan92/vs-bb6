@@ -4,6 +4,7 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Data;
 import net.froihofer.dsfinance.ws.trading.api.PublicStockQuote;
@@ -22,6 +23,8 @@ public class CustomerBean {
 
     @EJB
     private CustomerService customerService;
+    @Inject
+    private BankBean bankBean;
 
     private String getUsername() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -29,17 +32,7 @@ public class CustomerBean {
     }
 
     public List<Holding> getHoldings() {
-        return customerService.getHoldings(getUsername());
-    }
-
-    public double getStockCost(String symbol, int shares) {
-        try {
-            return customerService.getStockCost(symbol, shares);
-        } catch (TradingWSException_Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler beim berechnen des Werts der Aktie", e.getMessage()));
-        }
-        return 0;
+        return bankBean.getHoldings(getUsername());
     }
 
     public double getTotalValue() {
@@ -54,9 +47,7 @@ public class CustomerBean {
 
     public void buyStock() {
         try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            String username = context.getExternalContext().getUserPrincipal().getName();
-            customerService.buyStock(symbol, shares, username);
+            customerService.buyStock(symbol, shares, getUsername());
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
@@ -65,9 +56,7 @@ public class CustomerBean {
 
     public void sellStock() {
         try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            String username = context.getExternalContext().getUserPrincipal().getName();
-            customerService.sellStock(symbol, shares, username);
+            customerService.sellStock(symbol, shares, getUsername());
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "", e.getMessage()));

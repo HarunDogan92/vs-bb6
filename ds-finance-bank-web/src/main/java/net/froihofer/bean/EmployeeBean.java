@@ -9,7 +9,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Data;
 import net.froihofer.util.jboss.entity.Customer;
+import net.froihofer.util.jboss.entity.Holding;
 import net.froihofer.util.jboss.service.EmployeeService;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -58,9 +60,17 @@ public class EmployeeBean implements Serializable {
         }
     }
 
-    public void buyStockForCustomer(String username) {
+    public List<Holding> getHoldingsForCustomer(String username) {
+        if (StringUtils.isEmpty(username)) {
+            FacesContext context = FacesContext.getCurrentInstance();
+            username = context.getExternalContext().getUserPrincipal().getName();
+        }
+        return bankBean.getHoldings(username);
+    }
+
+    public void buyStockForCustomer() {
         try {
-            employeeService.buyStockForCustomer(symbol, shares, username);
+            employeeService.buyStockForCustomer(symbol, shares, selectedCustomer.getUsername());
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,
@@ -68,9 +78,9 @@ public class EmployeeBean implements Serializable {
         }
     }
 
-    public void sellStockForCustomer(String username) {
+    public void sellStockForCustomer() {
         try {
-            employeeService.sellStockForCustomer(symbol, shares, username);
+            employeeService.sellStockForCustomer(symbol, shares, selectedCustomer.getUsername());
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null,
