@@ -9,7 +9,9 @@
             <h:outputText value="#{bankBean.userRole}" />
         </h3>
         <h3>available Volume:
-            <h:outputText value="#{employeeBean.availableVolume}" />
+            <h:outputText value="#{employeeBean.availableVolume}">
+                <f:convertNumber type="currency" currencySymbol="€" maxFractionDigits="2" />
+            </h:outputText>
         </h3>
     </h:panelGroup>
     <!-- Kundensuche Section -->
