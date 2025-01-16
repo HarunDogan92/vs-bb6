@@ -22,6 +22,7 @@ public class TradingHistory {
     private double availableVolume;
     private String symbol;
     private int shares;
+    private double price;
     private String username;
     private String role;
 

@@ -33,7 +33,7 @@ public class CustomerService {
     @Inject
     private HoldingService holdingService;
 
-    private Bank getBank() {
+    public Bank getBank() {
         TypedQuery<Bank> query = em.createQuery("SELECT b FROM Bank b WHERE b.name = :name", Bank.class);
         query.setParameter("name", "Bank");
         Bank bank = query.getSingleResult();
@@ -84,6 +84,7 @@ public class CustomerService {
         TradingHistory tradingHistory = TradingHistory.builder()
                 .symbol(symbolUpper)
                 .shares(-shares)
+                .price(stockCost)
                 .availableVolume(bank.getAvailableVolume())
                 .username(username)
                 .role(role)
@@ -116,6 +117,7 @@ public class CustomerService {
         TradingHistory tradingHistory = TradingHistory.builder()
                 .symbol(symbolUpper)
                 .shares(shares)
+                .price(stockCost)
                 .availableVolume(bank.getAvailableVolume())
                 .username(username)
                 .role(role)

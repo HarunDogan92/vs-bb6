@@ -74,8 +74,9 @@
             </h:panelGrid>
 
             <h:commandButton value="Buy Stock" action="#{customerBean.buyStock}">
-                <f:ajax execute="@form" render="portfolioSummary" />
+                <f:ajax execute="@form" render="portfolioSummary messagesBuy" />
             </h:commandButton>
+            <h:messages id="messagesBuy" showDetail="true" style="color:red;" />
 
             <h:commandButton value="Aktien verkaufen" action="#{customerBean.sellStock}">
                 <f:ajax execute="@form" render="portfolioSummary messagesSell" />

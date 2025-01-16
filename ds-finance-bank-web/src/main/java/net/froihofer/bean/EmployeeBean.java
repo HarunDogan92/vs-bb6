@@ -78,4 +78,8 @@ public class EmployeeBean implements Serializable {
         }
     }
 
+    public double getAvailableVolume() {
+        return employeeService.getAvailableVolume();
+    }
+
 }
