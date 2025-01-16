@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 @Dependent
 public class WebService {
 
-    private static final Logger logger = Logger.getLogger(WebService.class.getName());
     private TradingWebService tradingWebService;
 
     private void init() {
@@ -33,19 +32,11 @@ public class WebService {
 
     public List<PublicStockQuote> getStockQuotesByName(String companyName) throws TradingWSException_Exception {
         init();
-        try {
-            return tradingWebService.findStockQuotesByCompanyName(companyName);
-        } catch (TradingWSException_Exception e) {
-            throw e;
-        }
+        return tradingWebService.findStockQuotesByCompanyName(companyName);
     }
     public List<PublicStockQuote> findStockQuotesByCompanyName(String partOfCompanyName) throws TradingWSException_Exception {
         init();
-        try {
-            return tradingWebService.findStockQuotesByCompanyName(partOfCompanyName);
-        } catch (TradingWSException_Exception e) {
-            throw e;
-        }
+        return tradingWebService.findStockQuotesByCompanyName(partOfCompanyName);
     }
 
     public double getLastTradePriceBySymbol(String symbol) throws TradingWSException_Exception {
@@ -70,19 +61,11 @@ public class WebService {
 
     public void sellStock(String symbol, int shares) throws TradingWSException_Exception {
         init();
-        try {
-            tradingWebService.sell(symbol, shares);
-        } catch (TradingWSException_Exception e) {
-            throw e;
-        }
+        tradingWebService.sell(symbol, shares);
     }
 
     public void buyStock(String symbol, int shares) throws TradingWSException_Exception {
         init();
-        try {
-            tradingWebService.buy(symbol, shares);
-        } catch (TradingWSException_Exception e) {
-            throw e;
-        }
+        tradingWebService.buy(symbol, shares);
     }
 }

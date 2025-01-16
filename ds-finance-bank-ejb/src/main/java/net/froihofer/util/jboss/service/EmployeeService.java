@@ -27,6 +27,10 @@ public class EmployeeService {
 
     private WildflyAuthDBHelper authDBHelper = new WildflyAuthDBHelper();
 
+    public double getAvailableVolume() {
+        return customerService.getBank().getAvailableVolume();
+    }
+
     public void sellStockForCustomer(String symbol, int shares, String username) throws TradingWSException_Exception {
         customerService.sellStock(symbol, shares, username);
     }
