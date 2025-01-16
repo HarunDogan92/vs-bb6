@@ -20,9 +20,6 @@ public class EmployeeService {
     private EntityManager em;
 
     @Inject
-    private WebService webService;
-
-    @Inject
     private CustomerService customerService;
 
     private WildflyAuthDBHelper authDBHelper = new WildflyAuthDBHelper();

@@ -41,9 +41,14 @@ public class EmployeeBean implements Serializable {
     private List<Customer> searchCustomer;
 
     public void addCustomer() throws IOException {
-        employeeService.addCustomer(id, username, password, firstName, lastName, address);
+        try {
+            employeeService.addCustomer(id, username, password, firstName, lastName, address);
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Erfolg", "Kunde erfolgreich angelegt!"));
+        } catch (Exception e) {
         FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Erfolg", "Kunde erfolgreich angelegt!"));
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "", e.getMessage()));
+        }
     }
 
     public void searchCustomer() {
@@ -56,7 +61,6 @@ public class EmployeeBean implements Serializable {
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler bei der Suche", e.getMessage()));
-            e.printStackTrace();
         }
     }
 
