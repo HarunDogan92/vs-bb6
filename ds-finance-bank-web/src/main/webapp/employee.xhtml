@@ -62,7 +62,7 @@
             <br /><br />
 
             <h3>Portfolio</h3>
-            <h:form id="portfolioSummary">
+            <h:form id="portfolioEmployee">
                 <h:dataTable value="#{employeeBean.getHoldingsForCustomer(employeeBean.selectedCustomer.username)}" var="entry">
                     <h:column>
                         <f:facet name="header">Stock Symbol</f:facet>
@@ -90,11 +90,11 @@
                 </h:panelGrid>
 
                 <h:commandButton value="Buy Stock" action="#{employeeBean.buyStockForCustomer}">
-                    <f:ajax execute="@form" render="portfolioSummary" />
+                    <f:ajax execute="@form" render="searchForm:portfolioEmployee" />
                 </h:commandButton>
 
                 <h:commandButton value="Aktien verkaufen" action="#{employeeBean.sellStockForCustomer}">
-                    <f:ajax execute="@form" render="portfolioSummary messagesSell" />
+                    <f:ajax execute="@form" render="searchForm:portfolioEmployee messagesSell" />
                 </h:commandButton>
                 <h:messages id="messagesSell" showDetail="true" style="color:red;" />
             </h:form>
